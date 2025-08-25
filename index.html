@@ -1,0 +1,2185 @@
+<!DOCTYPE html><html lang="en"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced AI Influencer Prompt Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .storage-section {
+            background-color: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #ffeaa7;
+        }
+        .storage-section h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+        .storage-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .storage-method {
+            flex: 1;
+            min-width: 250px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        .storage-method h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .advanced-options {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #81c784;
+        }
+        .advanced-options h3 {
+            margin-top: 0;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+        .option-group {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #c8e6c9;
+        }
+        .option-group h4 {
+            margin-top: 0;
+            color: #388e3c;
+            font-size: 16px;
+        }
+        .option-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .png-parser-section {
+            background-color: #f3e5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #ce93d8;
+        }
+        .prompt-parser-section {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #90caf9;
+        }
+        .profile-selector {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        .profile-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        .profile-section h3, .prompt-parser-section h3, .png-parser-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #495057;
+        }
+        input[type="text"], input[type="number"], input[type="file"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        select {
+            cursor: pointer;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .quantity-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .quantity-input {
+            width: 80px !important;
+            text-align: center;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .parse-button {
+            background-color: #9c27b0;
+        }
+        .parse-button:hover {
+            background-color: #7b1fa2;
+        }
+        .png-button {
+            background-color: #e91e63;
+        }
+        .png-button:hover {
+            background-color: #c2185b;
+        }
+        .save-button {
+            background-color: #28a745;
+        }
+        .save-button:hover {
+            background-color: #218838;
+        }
+        .delete-button {
+            background-color: #dc3545;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+        .new-button {
+            background-color: #6c757d;
+        }
+        .new-button:hover {
+            background-color: #5a6268;
+        }
+        .export-button {
+            background-color: #17a2b8;
+        }
+        .export-button:hover {
+            background-color: #138496;
+        }
+        .import-button {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .import-button:hover {
+            background-color: #e0a800;
+        }
+        .sheets-button {
+            background-color: #4285f4;
+        }
+        .sheets-button:hover {
+            background-color: #1a73e8;
+        }
+        .output-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .output-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        #generated-prompt {
+            background-color: white;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            min-height: 100px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .copy-button {
+            background-color: #17a2b8;
+            margin-top: 10px;
+            padding: 8px 20px;
+            font-size: 14px;
+        }
+        .copy-button:hover {
+            background-color: #138496;
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+        .col {
+            flex: 1;
+        }
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .profile-actions select {
+            flex: 1;
+            min-width: 200px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #000;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        #import-data {
+            width: 100%;
+            height: 200px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .info-text {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+        .parsed-results {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            display: none;
+        }
+        .png-results {
+            background-color: #f3e5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            display: none;
+        }
+        .parsed-results h4, .png-results h4 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        .parsed-item {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .parsed-item strong {
+            color: #1976d2;
+        }
+        .metadata-section {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+        .metadata-section h5 {
+            margin-top: 0;
+            color: #6c757d;
+        }
+        .metadata-content {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: white;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .sync-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .sync-status.synced {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .sync-status.not-synced {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .setup-instructions {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .setup-instructions ol {
+            margin-left: 20px;
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+        .file-input-label {
+            background-color: #e91e63;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        .file-input-label:hover {
+            background-color: #c2185b;
+        }
+        .prompt-counter {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
+            text-align: right;
+        }
+        .option-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        @media (max-width: 768px) {
+            .row {
+                flex-direction: column;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+            }
+            .profile-actions {
+                flex-direction: column;
+            }
+            .profile-actions select {
+                width: 100%;
+            }
+            .storage-options {
+                flex-direction: column;
+            }
+            .quantity-group {
+                width: 100%;
+                justify-content: center;
+            }
+            .option-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+<script src="https://puc.poecdn.net/authenticated_preview_page/syncedState.bd4eeeb8e8e02052ee92.js"></script></head>
+<body>
+    <div class="container">
+        <h1>Advanced AI Influencer Prompt Generator</h1>
+        
+        <!-- Storage Options Section -->
+        <div class="storage-section">
+            <h3>Storage Options <span class="sync-status not-synced" id="sync-status">Not Connected</span></h3>
+            <div class="storage-options">
+                <div class="storage-method">
+                    <h4>📁 Local JSON</h4>
+                    <p style="font-size: 14px; margin: 10px 0;">Export and import profiles as JSON files</p>
+                    <button class="export-button" onclick="exportProfiles()">Export JSON</button>
+                    <button class="import-button" onclick="showImportModal()">Import JSON</button>
+                </div>
+                <div class="storage-method">
+                    <h4>☁️ Google Sheets</h4>
+                    <p style="font-size: 14px; margin: 10px 0;">Sync profiles with Google Sheets</p>
+                    <button class="sheets-button" onclick="showSheetsSetup()" id="sheets-setup-btn">Setup Sheets</button>
+                    <button class="sheets-button" onclick="syncWithSheets()" id="sheets-sync-btn" style="display:none;">Sync Now</button>
+                    <button class="save-button" onclick="loadFromSheets()" id="sheets-load-btn" style="display:none;">Load from Sheets</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Options Section -->
+        <div class="advanced-options">
+            <h3>Advanced Prompt Options</h3>
+            <div class="option-row">
+                <div class="option-group">
+                    <h4>Shot Type</h4>
+                    <select id="shot-type-select" class="option-select">
+                        <option value="all">All Shot Types</option>
+                        <option value="(close-up shot:1.1)">Close-up</option>
+                        <option value="(medium shot:1.1)">Medium Shot</option>
+                        <option value="(medium full:1.1)">Medium Full</option>
+                        <option value="(full body shot:1.1)">Full Body</option>
+                        <option value="(wide shot:1.1)">Wide Shot</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <h4>Camera Angle</h4>
+                    <select id="angle-select" class="option-select">
+                        <option value="all">All Angles</option>
+                        <option value="low angle view">Low Angle</option>
+                        <option value="high angle view">High Angle</option>
+                        <option value="eye level view">Eye Level</option>
+                        <option value="bird's eye view">Bird's Eye</option>
+                        <option value="dutch angle">Dutch Angle</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <h4>Pose Category</h4>
+                    <select id="pose-category-select" class="option-select" onchange="updatePoseSubcategory()">
+                        <option value="all">All Poses</option>
+                        <option value="standing">Standing Poses</option>
+                        <option value="walking">Walking &amp; Movement</option>
+                        <option value="sitting">Sitting Poses</option>
+                        <option value="kneeling">Kneeling &amp; Crouching</option>
+                        <option value="laying">Laying Poses</option>
+                        <option value="expressive">Expressive / Emotional</option>
+                        <option value="arms">Arms &amp; Hands Focus</option>
+                        <option value="action">Action / Dynamic</option>
+                        <option value="instagram">Instagram / Social</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <h4>Specific Pose</h4>
+                    <select id="pose-select" class="option-select">
+                        <option value="all">All Poses in Category</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <h4>Camera Model</h4>
+                    <select id="camera-select" class="option-select">
+                        <option value="all">All Cameras</option>
+                        <option value="fujifilm">Fujifilm GFX</option>
+                        <option value="canon">Canon EOS R5</option>
+                        <option value="sony">Sony Alpha</option>
+                        <option value="nikon">Nikon Z</option>
+                        <option value="leica">Leica M11-D</option>
+                        <option value="hasselblad">Hasselblad</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <h4>Facial Expression</h4>
+                    <select id="expression-select" class="option-select">
+                        <option value="all">All Expressions</option>
+                        <option value="fierce look">Fierce Look</option>
+                        <option value="soft gaze">Soft Gaze</option>
+                        <option value="subtle smile">Subtle Smile</option>
+                        <option value="big genuine smile">Big Genuine Smile</option>
+                        <option value="pouty lips">Pouty Lips</option>
+                        <option value="smirk">Smirk</option>
+                        <option value="laughing">Laughing</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <h4>Lighting Type</h4>
+                    <select id="lighting-type-select" class="option-select">
+                        <option value="all">All Lighting Types</option>
+                        <option value="natural">Natural Lighting</option>
+                        <option value="cinematic">Cinematic Lighting</option>
+                        <option value="studio">Studio Lighting</option>
+                        <option value="dramatic">Dramatic Lighting</option>
+                        <option value="soft">Soft Lighting</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <h4>Lighting Direction</h4>
+                    <select id="lighting-direction-select" class="option-select">
+                        <option value="all">All Directions</option>
+                        <option value="left">Left Side</option>
+                        <option value="right">Right Side</option>
+                        <option value="overhead">Overhead</option>
+                        <option value="underneath">Underneath</option>
+                        <option value="backlit">Backlit</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- PNG Metadata Extractor Section -->
+        <div class="png-parser-section">
+            <h3>Extract from PNG Metadata</h3>
+            <div class="form-group">
+                <label for="png-input">Upload AI-Generated PNG Image:</label>
+                <div class="file-input-wrapper">
+                    <label for="png-input" class="file-input-label">Choose PNG File</label>
+                    <input type="file" id="png-input" accept=".png" onchange="handlePNGUpload(event)">
+                </div>
+                <span id="png-filename" style="margin-left: 10px; color: #6c757d;"></span>
+            </div>
+            <div class="error-message" id="png-error"></div>
+            <div class="png-results" id="png-results">
+                <h4>Extracted PNG Metadata:</h4>
+                <div class="metadata-section">
+                    <h5>Positive Prompt:</h5>
+                    <div class="metadata-content" id="png-positive-prompt"></div>
+                </div>
+                <div class="metadata-section">
+                    <h5>Negative Prompt:</h5>
+                    <div class="metadata-content" id="png-negative-prompt"></div>
+                </div>
+                <div class="metadata-section">
+                    <h5>Generation Settings:</h5>
+                    <div class="metadata-content" id="png-settings"></div>
+                </div>
+                <div class="metadata-section" id="adetailer-section" style="display:none;">
+                    <h5>ADetailer Settings:</h5>
+                    <div class="metadata-content" id="png-adetailer"></div>
+                </div>
+                <button class="parse-button" style="margin-top: 10px;" onclick="parseExtractedPrompt()">Extract Profile from Prompt</button>
+            </div>
+        </div>
+
+        <!-- Prompt Parser Section -->
+        <div class="prompt-parser-section">
+            <h3>Extract Profile from Prompt</h3>
+            <div class="form-group">
+                <label for="prompt-input">Paste Existing Prompt:</label>
+                <textarea id="prompt-input" placeholder="Paste a prompt here to extract profile details..."></textarea>
+            </div>
+            <button class="parse-button" onclick="parsePrompt()">Extract Profile Details</button>
+            <div class="error-message" id="parse-error"></div>
+            <div class="parsed-results" id="parsed-results">
+                <h4>Extracted Details:</h4>
+                <div id="parsed-content"></div>
+                <button class="save-button" style="margin-top: 10px;" onclick="createProfileFromParsed()">Create New Profile</button>
+            </div>
+        </div>
+
+        <div class="profile-selector">
+            <h3>Profile Management</h3>
+            <div class="profile-actions">
+                <select id="profile-select" onchange="loadProfile()">
+                    <option value="">Select a profile...</option>
+                </select>
+                <button class="new-button" onclick="newProfile()">New Profile</button>
+                <button class="delete-button" onclick="deleteProfile()">Delete</button>
+            </div>
+            <div class="success-message" id="success-message"></div>
+        </div>
+
+        <div class="profile-section">
+            <h3>Character Profile Setup</h3>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="char-name">Character Name:</label>
+                        <input type="text" id="char-name" placeholder="e.g., linda tutino">
+                    </div>
+                    <div class="form-group">
+                        <label for="body-type">Body Type:</label>
+                        <input type="text" id="body-type" placeholder="e.g., (skinny:1.6), (Petite:1.3)">
+                    </div>
+                    <div class="form-group">
+                        <label for="breast-size">Breast Size:</label>
+                        <input type="text" id="breast-size" placeholder="e.g., (size 32c breasts)">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="hair-color">Hair Color:</label>
+                        <input type="text" id="hair-color" placeholder="e.g., (Redhead:1.4)">
+                    </div>
+                    <div class="form-group">
+                        <label for="ethnicity">Ethnicity/Skin Tone:</label>
+                        <input type="text" id="ethnicity" placeholder="e.g., (Israeli skin tone, typical Israeli female features:1.2)">
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="save-button" onclick="saveProfile()">Save Profile</button>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <div class="quantity-group">
+                <label for="prompt-quantity" style="margin: 0;">Number of prompts:</label>
+                <input type="number" id="prompt-quantity" class="quantity-input" value="1" min="1" max="10000">
+            </div>
+            <button onclick="generatePrompt()">Generate Prompt</button>
+        </div>
+
+        <div class="output-section">
+            <h3>Generated Prompt:</h3>
+            <div id="generated-prompt"></div>
+            <div class="prompt-counter" id="prompt-counter"></div>
+            <button class="copy-button" onclick="copyToClipboard()">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <!-- Modal for new profile name -->
+    <div id="nameModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <h3>Enter Profile Name</h3>
+            <input type="text" id="new-profile-name" placeholder="Enter profile name..." style="width: 100%; margin: 20px 0;">
+            <button onclick="createNewProfile()">Create Profile</button>
+        </div>
+    </div>
+
+    <!-- Modal for import -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeImportModal()">×</span>
+            <h3>Import Profiles</h3>
+            <p>Paste your exported profile data below:</p>
+            <textarea id="import-data" placeholder="Paste exported JSON data here..."></textarea>
+            <button onclick="importProfiles()">Import</button>
+        </div>
+    </div>
+
+    <!-- Modal for Google Sheets Setup -->
+    <div id="sheetsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSheetsModal()">×</span>
+            <h3>Google Sheets Setup</h3>
+            <div class="setup-instructions">
+                <p><strong>To use Google Sheets storage:</strong></p>
+                <ol>
+                    <li>Create a new Google Sheet</li>
+                    <li>Go to Extensions → Apps Script</li>
+                    <li>Copy and paste the code below</li>
+                    <li>Deploy as Web App (Execute as: Me, Access: Anyone)</li>
+                    <li>Copy the Web App URL and paste it below</li>
+                </ol>
+            </div>
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="sheets-url">Google Sheets Web App URL:</label>
+                <input type="text" id="sheets-url" placeholder="https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec">
+                <button class="save-button" style="margin-top: 10px;" onclick="saveSheetsUrl()">Save URL</button>
+            </div>
+            <div style="margin-top: 20px;">
+                <h4>Apps Script Code:</h4>
+                <textarea style="width: 100%; height: 300px; font-family: monospace; font-size: 12px;" readonly="">function doGet() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const data = sheet.getDataRange().getValues();
+  const profiles = {};
+  
+  for (let i = 1; i &lt; data.length; i++) {
+    if (data[i][0]) {
+      profiles[data[i][0]] = {
+        name: data[i][1],
+        bodyType: data[i][2],
+        hairColor: data[i][3],
+        ethnicity: data[i][4],
+        breastSize: data[i][5]
+      };
+    }
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify(profiles))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const profiles = JSON.parse(e.postData.contents);
+  
+  // Clear existing data
+  sheet.clear();
+  
+  // Add headers
+  sheet.getRange(1, 1, 1, 6).setValues([['Profile Name', 'Character Name', 'Body Type', 'Hair Color', 'Ethnicity', 'Breast Size']]);
+  
+  // Add profile data
+  const rows = [];
+  for (const [profileName, data] of Object.entries(profiles)) {
+    rows.push([
+      profileName,
+      data.name || '',
+      data.bodyType || '',
+      data.hairColor || '',
+      data.ethnicity || '',
+      data.breastSize || ''
+    ]);
+  }
+  
+  if (rows.length &gt; 0) {
+    sheet.getRange(2, 1, rows.length, 6).setValues(rows);
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify({success: true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize profiles in memory
+        let profiles = {
+            'Linda Tutino': {
+                name: 'linda tutino',
+                bodyType: '(skinny:1.6), (Petite:1.3)',
+                hairColor: '(Redhead:1.4)',
+                ethnicity: '(Israeli skin tone, typical Israeli female features:1.2)',
+                breastSize: '(size 32c breasts)'
+            },
+            'Natasha Blom': {
+                name: 'natasha blom',
+                bodyType: '(skinny:1.5), (Petite:1.3)',
+                hairColor: '(brunette:1.3)',
+                ethnicity: '(Swedish skin tone, typical Swedish female features)',
+                breastSize: '(size 32c breasts:1.3)'
+            }
+        };
+        
+        let currentProfileName = '';
+        let parsedProfileData = null;
+        let sheetsUrl = '';
+        let extractedPrompt = '';
+
+        // Check for saved Sheets URL
+        try {
+            sheetsUrl = localStorage.getItem('ai-influencer-sheets-url') || '';
+            if (sheetsUrl) {
+                document.getElementById('sheets-setup-btn').style.display = 'none';
+                document.getElementById('sheets-sync-btn').style.display = 'inline-block';
+                document.getElementById('sheets-load-btn').style.display = 'inline-block';
+                updateSyncStatus(true);
+            }
+        } catch (e) {
+            console.log('localStorage not available');
+        }
+
+        // Shot types array
+        const shotTypes = [
+            "(close-up shot:1.1)",
+            "(medium shot:1.1)",
+            "(medium full:1.1)",
+            "(full body shot:1.1)",
+            "(wide shot:1.1)"
+        ];
+
+        // Camera angles array
+        const cameraAngles = [
+            "low angle view",
+            "high angle view",
+            "eye level view",
+            "bird's eye view",
+            "dutch angle"
+        ];
+
+        // Pose categories and poses
+        const poseCategories = {
+            standing: {
+                name: "Standing Poses",
+                poses: [
+                    "standing straight, neutral",
+                    "standing with arms crossed",
+                    "standing hands on hips",
+                    "standing one hand in pocket",
+                    "standing with arms behind back",
+                    "standing with hands clasped in front",
+                    "standing legs crossed",
+                    "standing wide-legged, power pose",
+                    "standing profile view",
+                    "standing looking over shoulder",
+                    "standing leaning against wall",
+                    "standing with weight on one leg",
+                    "standing tiptoes reaching up",
+                    "standing twisting torso",
+                    "standing arms stretched outward",
+                    "standing saluting",
+                    "standing with hands covering face",
+                    "standing with arms raised high",
+                    "standing relaxed, slouched",
+                    "standing with hands in jacket pockets"
+                ]
+            },
+            walking: {
+                name: "Walking & Movement",
+                poses: [
+                    "walking forward, mid-stride",
+                    "walking away from camera",
+                    "walking side view",
+                    "walking toward camera, head down",
+                    "walking hands in pockets",
+                    "walking arms swinging",
+                    "walking while looking back",
+                    "walking while turning head sideways",
+                    "walking briskly",
+                    "walking slowly, casual stroll",
+                    "running forward sprint",
+                    "running away, action shot",
+                    "running side view mid-step",
+                    "running with arms pumping",
+                    "running with hair flying back",
+                    "jogging casual pace",
+                    "leaping forward mid-run",
+                    "skipping playfully",
+                    "tiptoeing lightly",
+                    "striding confidently"
+                ]
+            },
+            sitting: {
+                name: "Sitting Poses",
+                poses: [
+                    "sitting on chair straight-backed",
+                    "sitting slouched, relaxed",
+                    "sitting cross-legged on chair",
+                    "sitting cross-legged on ground",
+                    "sitting legs crossed, arms folded",
+                    "sitting sideways, looking back",
+                    "sitting legs apart, leaning forward",
+                    "sitting with one knee up",
+                    "sitting on ground knees tucked in",
+                    "sitting with legs stretched forward",
+                    "sitting arms behind supporting body",
+                    "sitting hugging knees",
+                    "sitting chin on hand",
+                    "sitting elbows on knees",
+                    "sitting back arched, leaning",
+                    "sitting on edge of chair, forward",
+                    "sitting on stairs, casual",
+                    "sitting with one leg dangling",
+                    "sitting arms stretched overhead"
+                ]
+            },
+            kneeling: {
+                name: "Kneeling & Crouching",
+                poses: [
+                    "kneeling both knees down",
+                    "kneeling one knee up",
+                    "kneeling head bowed",
+                    "kneeling arms stretched upward",
+                    "kneeling leaning forward hands on ground",
+                    "kneeling praying pose",
+                    "kneeling with one hand on thigh",
+                    "kneeling sideways glance",
+                    "crouching low, both feet flat",
+                    "crouching on toes, heels lifted",
+                    "crouching elbows on knees",
+                    "crouching one hand on ground",
+                    "crouching ready-to-sprint stance",
+                    "squatting wide-legged",
+                    "squatting resting arms on knees",
+                    "squatting low head tilted up",
+                    "squatting holding chin",
+                    "squatting casual lean",
+                    "squatting one leg outstretched"
+                ]
+            },
+            laying: {
+                name: "Laying Poses",
+                poses: [
+                    "laying flat on back arms at sides",
+                    "laying flat on back arms stretched up",
+                    "laying flat on stomach arms folded",
+                    "laying on stomach chin resting on hands",
+                    "laying on side propped on elbow",
+                    "laying on side one hand in hair",
+                    "laying curled fetal position",
+                    "laying on back one knee bent",
+                    "laying arched back stretch",
+                    "laying sideways looking away",
+                    "laying face down arms extended",
+                    "laying on back arms covering face",
+                    "laying with legs crossed ankles",
+                    "laying on stomach legs bent up",
+                    "laying starfish pose",
+                    "laying lounging sideways, relaxed"
+                ]
+            },
+            expressive: {
+                name: "Expressive / Emotional Poses",
+                poses: [
+                    "looking straight at camera",
+                    "looking down shyly",
+                    "looking up toward sky",
+                    "looking over shoulder, smirk",
+                    "looking away distant gaze",
+                    "looking back, hair covering face",
+                    "looking sideways subtle glance",
+                    "looking down hands clasped",
+                    "looking with head tilted",
+                    "looking chin resting on hand",
+                    "looking with both hands covering mouth",
+                    "looking with one hand shielding eyes",
+                    "looking thoughtful, pensive",
+                    "looking shocked, wide eyes",
+                    "looking with hand brushing hair aside",
+                    "looking one eye covered by hand",
+                    "looking with both hands cupping face"
+                ]
+            },
+            arms: {
+                name: "Arms & Hands Focus",
+                poses: [
+                    "arms crossed firm",
+                    "arms behind head relaxed",
+                    "arms behind back formal",
+                    "arms stretched wide",
+                    "arms raised overhead",
+                    "one arm reaching forward",
+                    "one hand on hip",
+                    "one hand touching chin",
+                    "one hand covering eye",
+                    "both hands on face",
+                    "both hands in pockets",
+                    "both hands holding head",
+                    "both hands clasped in front",
+                    "one hand brushing through hair",
+                    "one hand stretched outward to camera"
+                ]
+            },
+            action: {
+                name: "Action / Dynamic",
+                poses: [
+                    "jumping straight up",
+                    "jumping arms out wide",
+                    "jumping knees bent",
+                    "jumping hair flipping",
+                    "jumping side kick",
+                    "twisting mid-air",
+                    "dance spin pose",
+                    "ballet one leg raised",
+                    "hip hop squat pose",
+                    "dramatic hand gesture",
+                    "stretching full body",
+                    "arching back hands on hips",
+                    "climbing pose",
+                    "falling backwards dramatic",
+                    "spinning mid-turn",
+                    "kicking forward"
+                ]
+            },
+            instagram: {
+                name: "Instagram / Social",
+                poses: [
+                    "hand on hip, tilted head",
+                    "sitting on knees looking back",
+                    "leaning on railing, looking away",
+                    "casual lean against car/wall",
+                    "squatting low, peace sign",
+                    "mirror selfie stance",
+                    "one leg bent against wall",
+                    "over-the-shoulder glance",
+                    "sitting legs spread, playful",
+                    "coffee cup in hand, candid",
+                    "walking crosswalk mid-step",
+                    "looking back hair over shoulder",
+                    "crouching low with phone in hand",
+                    "laughing head thrown back",
+                    "arms raised in celebration"
+                ]
+            }
+        };
+
+        // Hair styles
+        const hairStyles = [
+            "(boho waves hairstyle:1.4)",
+            "(double dutch braids hairstyle:1.4)",
+            "(center part sleek hair hairstyle:1.4)",
+            "(french twist hairstyle:1.4)",
+            "(long straight hairstyle:1.4)",
+            "(updo ponytail hairstyle:1.4)"
+        ];
+
+        // Camera and lens combinations
+        const cameraSettings = {
+            fujifilm: [
+                "Fujifilm GFX 100S II with GF 110mm f/2 R LM WR",
+                "Fujifilm GFX 100S II with GF 100-200mm f/5.6 R LM OIS WR"
+            ],
+            canon: [
+                "Canon EOS R5 Mark II with RF 85mm f/1.2L USM",
+                "Canon EOS R5 Mark II with RF 50mm f/1.2L USM"
+            ],
+            sony: [
+                "Sony A7R V with Sony FE 85mm f/1.4 GM",
+                "Sony A7R V with Sony FE 50mm f/1.2 GM",
+                "Sony A7 IV with Sony FE 85mm f/1.8",
+                "Sony A7 IV with Sony FE 70-200mm f/2.8 GM OSS II",
+                "Sony A7 III with Sony FE 85mm f/1.8",
+                "Sony A7 III with Sony FE 135mm f/1.8 GM"
+            ],
+            nikon: [
+                "Nikon Z8 with Nikkor Z 85mm f/1.8 S",
+                "Nikon Z8 with Nikkor Z 70-200mm f/2.8 VR S",
+                "Nikon Z6 III with Nikkor Z 85mm f/1.8 S",
+                "Nikon Z6 III with Nikkor Z 50mm f/1.2 S",
+                "Nikon Z7 II with Nikkor 105mm f/1.4E ED",
+                "Nikon Z7 II with Nikkor Z 50mm f/1.2 S"
+            ],
+            leica: [
+                "Leica M11-D with Leica APO-Summicron-M 75mm f/2 ASPH",
+                "Leica M11-D with Leica Summilux-M 50mm f/1.4 ASPH"
+            ],
+            hasselblad: [
+                "Hasselblad 907X 100C with XCD 80mm f/1.9",
+                "Hasselblad 907X 100C with XCD 120mm f/3.5 Macro"
+            ]
+        };
+
+        // Facial expressions
+        const facialExpressions = [
+            "fierce look",
+            "soft gaze",
+            "subtle smile",
+            "soft smile, eyes looking into camera",
+            "big genuine smile, teeth showing",
+            "closed-mouth smile, subtle and chic",
+            "pouty lips, sultry gaze",
+            "duck face pout, playful",
+            "tongue out, winking",
+            "smirk with raised eyebrow",
+            "side-eye glance with slight grin",
+            "eyes closed, head tilted back, enjoying moment",
+            "eyes closed, slight smile, serene",
+            "looking over shoulder with sly smile",
+            "hand covering mouth while smiling",
+            "bite lower lip, flirtatious look",
+            "kissy face toward camera",
+            "peace sign near face, playful grin",
+            "hair flip with laughing face",
+            "looking down shyly, small smile",
+            "fake serious face, straight lips",
+            "raised brows with mischievous smile",
+            "chin slightly tucked, big bright eyes",
+            "half smile, mysterious expression",
+            "eyes squinting with laughter",
+            "one eye wink, lips pursed",
+            "caught off guard candid look",
+            "hands on cheeks, exaggerated cute face",
+            "laughing while looking away",
+            "soft dreamy expression, parted lips",
+            "fierce stare, no smile",
+            "bold confident smirk, eyes locked on camera"
+        ];
+
+        // Lighting types
+        const lightingTypes = {
+            natural: ["natural lighting", "sunlight", "daylight", "ambient light"],
+            cinematic: ["cinematic lighting", "film lighting", "movie-style lighting"],
+            studio: ["studio lighting", "professional lighting", "softbox lighting"],
+            dramatic: ["dramatic lighting", "high contrast lighting", "moody lighting"],
+            soft: ["soft lighting", "diffused lighting", "gentle lighting"]
+        };
+
+        // Lighting directions
+        const lightingDirections = {
+            left: "left side",
+            right: "right side",
+            overhead: "overhead",
+            underneath: "underneath",
+            backlit: "backlit"
+        };
+
+        // Combined lighting descriptions
+        const lightingCombinations = {
+            indoor: [
+                "cinematic lighting from the left side",
+                "fluorescent lights from overhead",
+                "dramatic lighting from the right side",
+                "dim lighting from underneath",
+                "natural lighting through windows from the left",
+                "studio lighting from both sides",
+                "warm ambient lighting from overhead",
+                "soft diffused lighting from the right"
+            ],
+            outdoor: [
+                "golden hour sunlight from the left",
+                "blue hour ambient light from overhead",
+                "sunrise lighting from the right side",
+                "sunset backlighting",
+                "overcast natural light from above",
+                "moonlight from the left side",
+                "street lights from underneath",
+                "natural daylight from overhead"
+            ]
+        };
+
+        // Outfits array (unchanged)
+        const outfits = [
+            "wearing a (brown:1.2) knit Cropped Off one Shoulder Long Sleeve sweater BREAK , (beige v-string micro thong:1.1)",
+            "wearing (open front red silk robe:1.2) BREAK (yellow lace bra and thong panties:1.2)",
+            "braless, Distressed grey denim mini skirt with a cropped white tee, completed with white sneakers, a grey crop denim jacket, and layered necklaces",
+            "wearing (little red riding hood costume:1.1) (red hooded gown:1.2) BREAK (red lace bra:1.3) and microskirt with, thigh high leggings, red choker",
+            "wearing (open pink Cardigan:1.3) BREAK, (turquoise lace bra and thong:1.3)",
+            "wearing a (blue hoodie:1.3) BREAK, (white thong panties), midriff",
+            "wearing a (pink cropped hoodie:1.2) BREAK, (turquoise thong panties:1.2), pink pioneer dj headphones on head",
+            "wearing a white fuzzy trim hooded crop top sweater BREAK, (white v-string micro thong:1.2), with white choker and white pioneer headphones",
+            "wearing a white button front micro skirt, a cropped sleeveless blouse, completed with a leather belt and a delicate choker necklace, cleavage, midriff, legs",
+            "wearing a (open black hooded cloak:1.2) BREAK , sexy (black:1.2) Lace Up bustier dress, black microskirt, black choker, cleavage",
+            "wearing a (yellow spandex mock neck long sleeve bodysuit:1.4) , sexy legs, yellow thigh highs",
+            "wearing a thin (white knitted turtleneck cropped sweater:1.1) BREAK, (v-string micro thong:1.3), midriff",
+            "wearing a Crochet-trimmed kaftan worn over a colorful string bikini, paired with embellished sandals, a beach tote, and a pair of aviator sunglasses",
+            "wearing a (turquoise long sleeve lace deep-v bodysuit:1.4), stalkings, turquoise choker, cleavage",
+            "wearing a (red lace plunge lingerie deep-v bodysuit:1.3), stalkings, red choker, cleavage",
+            "wearing a red bra lace trim and a (red v-string micro thong:1.3), red choker, midrriff, cleavage",
+            "wearing a (purple bikini:1.3), purple choker",
+            "wearing (2 inch spandex navy color yoga shorts:1.3) and a (navy sports bra), midriff, cleavage, sexy legs",
+            "braless, wearing a (yellow deep v-neck crop top:1.3), layered necklace BREAK, tight yellow denim micro skirt, (sexy legs:1.2), midriff, cleavage, clear aviator sunglasses",
+            "wearing a (sexy black deep v-neck mini club dress:1.3) , side slit sexy legs",
+            "wearing a sexy (black lace bra:1.1) and (v-string micro thong:1.3) BREAK, black opened cropped leather jacket and choker",
+            "wearing an elegant white (deep v-neck mini club short dress:1.3), (legs:1.2), cleavage, braless",
+            "wearing a (black long sleeve lace deep-v bodysuit:1.4), black choker, (sexy legs:1.2), cleavage",
+            "wearing an open blue cropped hoodie BREAK, and lace bra, (white v-string micro thong:1.3), cleavage",
+            "wearing a (maroon lace plunge lingerie deep-v bodysuit:1.3), stalkings, maroon choker, cleavage",
+            "wearing a (white lace trim camisole top:1.2) BREAK, (white v-string micro thong:1.3), midriff",
+            "wearing a turquoise lace bra, cleavage, (v-string micro thong:1.3), turquoise choker",
+            "wearing a thin (black knitted turtleneck cropped sweater:1.1) BREAK, black (v-string micro thong:1.3), midriff",
+            "wearing a (earthy colors knitted short sleeve blouse front tied) BREAK, (v-string micro thong:1.3)",
+            "wearing a pastel colored short sleeve baby tee shirt ((blouse)) open front lace trim BREAK, (v-string micro thong:1.3)",
+            "wearing a colorful (multicolored floral print short sleeve blouse front tied) BREAK, (v-string micro thong:1.3), midriff",
+            "wearing (green lace ligerie) BREAK, pink (v-string micro thong:1.3), midriff, cleavage",
+            "wearing (navy lace ligerie) BREAK, navy (v-string micro thong:1.3), midriff, cleavage",
+            "wearing a thin (pink knitted turtleneck cropped sweater:1.1) BREAK, pink (v-string micro thong:1.3), midriff",
+            "wearing a thin (purple knitted turtleneck cropped sweater:1.1) BREAK, purple (v-string micro thong:1.3), midriff",
+            "wearing a colorful cotton fitted baby tee shirt BREAK, (v-string micro thong:1.3), beanie",
+            "wearing a colorful cotton fitted baby tee shirt v-neck BREAK, (v-string micro thong:1.3), cute hat",
+            "wearing a cotton hoodie sweater open front with bra BREAK, (v-string micro thong:1.3)",
+            "wearing a colorful (multicolored knitted short sleeve blouse front tied) BREAK, (v-string micro thong:1.3), midriff",
+            "wearing a colorful cotton baby tee shirt v-neck BREAK, (v-string micro thong:1.3)",
+            "wearing a (red thong bikini:1.2), cleavage",
+            "wearing (red lace ligerie) BREAK, red (v-string micro thong:1.3), midriff, cleavage",
+            "wearing a thin (red knitted turtleneck cropped sweater:1.1) BREAK, red (v-string micro thong:1.3), midriff",
+            "wearing a (white long sleeve lace deep-v bodysuit:1.4), stalkings, white choker, cleavage",
+            "wearing a thin (white knitted turtleneck cropped sweater:1.1) BREAK, (v-string micro thong:1.3), midriff",
+            "wearing (yellow lace ligerie) BREAK, yellow (v-string micro thong:1.3), midriff, cleavage",
+            "wearing a thin (yellow knitted turtleneck cropped sweater:1.1) BREAK, yellow (v-string micro thong:1.3), midriff",
+            "wearing a cotton (teal tank top shirt) with lace trim BREAK, (teal cotton v-string micro thong:1.3) with lace trim, cleavage, sexy legs",
+            "wearing a sexy (jade micro bikini:1.3)",
+            "wearing a sexy (red micro bikini:1.3), red choker",
+            "wearing a sexy (yellow micro bikini:1.3), yellow choker"
+        ];
+
+        // Location bases (unchanged from previous)
+        const locationBases = [
+            // Indoor locations
+            "tan walls, house plants background, living room scenery",
+            "cozy livingroom with grey walls and gothic drapes, gothic furniture, many candles are lit up on the fireplace mantle and many candle stands in background, gothic scenery",
+            "(plain grey background:1.2)",
+            "natural boho living room with canvas couch and natural pillows and many hanging ivy plants on the natural walls, detailed background",
+            "boho style scenery, lots of houseplants, well lit background",
+            "indoor boho style house scenery background",
+            "thick fuzzy white comforter and white pillows, bedroom scenery",
+            "ancient gothic room cluttered with many candelabras, lit candles, misty haze, arched stain glass windows, dark black magic witchcraft scenery",
+            "cozy livingroom with white walls and white drapes, white fuzzy pillows",
+            "indoor pool scenery",
+            "hotel room in Las Vegas scenery",
+            "historic colonial style mansion scenery, well preserved antique furniture, wooden staircase",
+            "retail clothing store, dressing room, clothes racks, clothes hangers, mirrors",
+            "modern white bedroom walls, white sheets and pillows",
+            "indoor cabin in the woods, cozy fireplace",
+            "interior antique furnace, cute dutch livingroom",
+            "colorful interior elegant mansion scenery",
+            "indoor locker room scenery",
+            "boho style bedroom with boho decor scenery, teal bedding, teal pillows and sheets, teal walls, boho designs",
+            "luxury penthouse apartment overlooking city skyline, modern furniture, floor to ceiling windows",
+            "abandoned warehouse, industrial scenery",
+            "vintage diner, retro decor, neon signs, checkered floor",
+            "art gallery, white walls, contemporary sculptures, minimalist scenery",
+            "underground subway station, urban atmosphere",
+            "mountain cabin interior, fireplace, wooden beams, cozy atmosphere",
+            "vintage record store, vinyl albums, retro posters",
+            "botanical garden greenhouse, exotic plants, humid atmosphere",
+            "modern gym facility, exercise equipment, mirror walls",
+            "bookstore cafe, cozy atmosphere, warm lighting, bookshelves",
+            "nightclub dance floor, laser lights, foggy atmosphere",
+            "luxury hotel lobby, marble floors, chandelier lighting",
+            "vintage theater backstage, velvet curtains",
+            "modern art museum, geometric architecture",
+            "vintage train station, art deco architecture",
+            "luxury spa interior, zen atmosphere",
+            "underground music venue, brick walls, stage lighting",
+            "luxury shopping mall, glass ceiling, modern architecture",
+            "industrial loft apartment, exposed brick, large windows",
+            "luxury casino interior, chandelier lighting, opulent decor",
+            "modern kitchen, marble countertops",
+            "vintage arcade, neon lights, retro game machines",
+            "botanical conservatory, glass dome, tropical plants",
+            "modern dance studio, mirror walls, wooden floors",
+            "luxury yacht interior, leather seating, ocean view",
+            "vintage jazz club, stage atmosphere",
+            "modern art studio, paint splattered walls",
+            "luxury mountain chalet interior, snow covered peaks view, fireplace",
+            "vintage bookshop, leather bound books",
+            "luxury private jet interior, leather seats, window view",
+            "vintage piano bar, candlelit tables, intimate atmosphere",
+            "modern greenhouse cafe, hanging plants",
+            "luxury wine cellar, oak barrels",
+            "modern minimalist home, clean lines, natural materials",
+            "vintage subway car, retro advertisements",
+            "indoor grocery store scenery"
+        ];
+
+        const outdoorLocationBases = [
+            // Outdoor locations
+            "forest at night, enchanted forest scenery",
+            "beautiful grass field on a hill scenery",
+            "grape vineyard scenery",
+            "on a rooftop overlooking downtown Los Angeles at night",
+            "outdoor hill scenery",
+            "las vegas hotel pool scenery",
+            "outdoor nature hiking on a hill scenery, redwood forest background",
+            "crowded Coachella music festival scenery",
+            "romantic outdoor italian bistro at night scenery",
+            "intimate boho style outdoor restaurant with string lights and big plants background scenery",
+            "fashion show runway outdoors, spot lights on model",
+            "outdoor Joshua tree desert scenery, rocks",
+            "lush forest scenery",
+            "grassy hill with mountains in background, lush trees on a grassy meadow",
+            "Rocky mountains scenery, mountain rocks and trees",
+            "corn farm, outdoor tall corn farm scenery",
+            "poppy farm, outdoor hills field of poppy flowers scenery",
+            "outdoor woody forest scenery",
+            "outdoor scenery",
+            "outdoor nature scenery",
+            "colorful exterior elegant mansion scenery",
+            "outdoor beautiful nature scenery",
+            "lake mead arizona scenery",
+            "football field scenery",
+            "exterior downtown city streets of miami, scenery",
+            "snow filled forest on snow covered trees scenery",
+            "sunflower farm, outdoor hills field of sunflowers scenery",
+            "miami beach palm trees ocean scenery",
+            "miami beach scenery",
+            "South beach miami downtown scenery",
+            "backyard alley of new york, graffiti walls, urban scenery",
+            "outside a club of LA, neon lights, nightlife scenery",
+            "japanese zen garden, bamboo forest background, peaceful atmosphere",
+            "tropical beach resort, palm trees, tiki torches",
+            "rooftop pool party, city lights background, modern scenery",
+            "desert canyon, red rocks, dramatic shadows",
+            "farmers market, colorful produce stands",
+            "university campus quad, autumn trees",
+            "coastal cliff overlook, ocean waves",
+            "urban rooftop garden, city skyline",
+            "street market in bangkok, colorful lanterns, bustling scenery",
+            "ski resort lodge exterior, snowy mountain view",
+            "vineyard estate terrace, rolling hills",
+            "beach bonfire party",
+            "modern office building rooftop, city view",
+            "vintage carnival, ferris wheel, colorful lights",
+            "mountain hiking trail overlook, valley view",
+            "outdoor music festival, stage lights, crowd atmosphere",
+            "luxury hotel pool, cabanas, palm trees",
+            "seaside boardwalk, amusement park lights",
+            "mountain meadow, wildflowers, alpine scenery",
+            "urban skate park, graffiti art",
+            "modern penthouse balcony, city lights",
+            "tropical rainforest, waterfall, misty atmosphere",
+            "luxury resort beach club, infinity pool, ocean view",
+            "coastal lighthouse, rocky shore",
+            "urban underground tunnel entrance, neon lights",
+            "luxury ski chalet balcony, mountain view, snow",
+            "modern rooftop bar, city skyline",
+            "tropical island dock, turquoise water, palm trees",
+            "urban basketball court, chain fence",
+            "desert oasis, palm trees, golden sand dunes",
+            "urban fire escape, brick building",
+            "luxury beach villa, infinity pool, ocean sunset",
+            "modern sculpture park, abstract art, green lawn",
+            "coastal cave entrance, dramatic rocks, ocean spray",
+            "urban parking garage rooftop, city view",
+            "vintage fairground, carousel horses, string lights",
+            "tropical mangrove forest, wooden walkway, filtered light",
+            "urban alleyway cafe, string lights, brick walls",
+            "luxury ski chalet balcony, mountain view, snow"
+        ];
+
+        // Update pose subcategory dropdown
+        function updatePoseSubcategory() {
+            const categorySelect = document.getElementById('pose-category-select');
+            const poseSelect = document.getElementById('pose-select');
+            const selectedCategory = categorySelect.value;
+            
+            // Clear current options
+            poseSelect.innerHTML = '<option value="all">All Poses in Category</option>';
+            
+            if (selectedCategory !== 'all' && poseCategories[selectedCategory]) {
+                poseCategories[selectedCategory].poses.forEach(pose => {
+                    const option = document.createElement('option');
+                    option.value = pose;
+                    option.textContent = pose;
+                    poseSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Get filtered options based on advanced selections
+        function getFilteredOptions() {
+            const shotTypeSelect = document.getElementById('shot-type-select').value;
+            const angleSelect = document.getElementById('angle-select').value;
+            const poseCategorySelect = document.getElementById('pose-category-select').value;
+            const poseSelect = document.getElementById('pose-select').value;
+            const cameraSelect = document.getElementById('camera-select').value;
+            const expressionSelect = document.getElementById('expression-select').value;
+            const lightingTypeSelect = document.getElementById('lighting-type-select').value;
+            const lightingDirectionSelect = document.getElementById('lighting-direction-select').value;
+            
+            // Filter shot types
+            let filteredShotTypes = shotTypeSelect === 'all' ? shotTypes : [shotTypeSelect];
+            
+            // Filter camera angles
+            let filteredAngles = angleSelect === 'all' ? cameraAngles : [angleSelect];
+            
+            // Filter poses
+            let filteredPoses = [];
+            if (poseCategorySelect === 'all') {
+                // Add all poses from all categories
+                Object.values(poseCategories).forEach(category => {
+                    filteredPoses = filteredPoses.concat(category.poses);
+                });
+            } else if (poseCategories[poseCategorySelect]) {
+                if (poseSelect === 'all') {
+                    filteredPoses = poseCategories[poseCategorySelect].poses;
+                } else {
+                    filteredPoses = [poseSelect];
+                }
+            }
+            
+            // Filter cameras
+            let filteredCameras = [];
+            if (cameraSelect === 'all') {
+                Object.values(cameraSettings).forEach(cameras => {
+                    filteredCameras = filteredCameras.concat(cameras);
+                });
+            } else if (cameraSettings[cameraSelect]) {
+                filteredCameras = cameraSettings[cameraSelect];
+            }
+            
+            // Filter expressions
+            let filteredExpressions = expressionSelect === 'all' ? facialExpressions : [expressionSelect];
+            
+            // Filter lighting
+            let filteredLightingTypes = [];
+            if (lightingTypeSelect === 'all') {
+                Object.values(lightingTypes).forEach(types => {
+                    filteredLightingTypes = filteredLightingTypes.concat(types);
+                });
+            } else if (lightingTypes[lightingTypeSelect]) {
+                filteredLightingTypes = lightingTypes[lightingTypeSelect];
+            }
+            
+            let filteredLightingDirections = [];
+            if (lightingDirectionSelect === 'all') {
+                filteredLightingDirections = Object.values(lightingDirections);
+            } else if (lightingDirections[lightingDirectionSelect]) {
+                filteredLightingDirections = [lightingDirections[lightingDirectionSelect]];
+            }
+            
+            return {
+                shotTypes: filteredShotTypes,
+                angles: filteredAngles,
+                poses: filteredPoses,
+                cameras: filteredCameras,
+                expressions: filteredExpressions,
+                lightingTypes: filteredLightingTypes,
+                lightingDirections: filteredLightingDirections
+            };
+        }
+
+        // PNG Metadata Extraction Functions
+        function handlePNGUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            document.getElementById('png-filename').textContent = file.name;
+            
+            if (file.type !== 'image/png') {
+                showPNGError('Please upload a PNG file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                extractPNGMetadata(e.target.result);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function extractPNGMetadata(arrayBuffer) {
+            try {
+                const dataView = new DataView(arrayBuffer);
+                const textChunks = [];
+                
+                // PNG signature
+                const signature = new Uint8Array(arrayBuffer, 0, 8);
+                const pngSignature = [137, 80, 78, 71, 13, 10, 26, 10];
+                
+                for (let i = 0; i < 8; i++) {
+                    if (signature[i] !== pngSignature[i]) {
+                        showPNGError('Invalid PNG file');
+                        return;
+                    }
+                }
+                
+                let offset = 8;
+                while (offset < dataView.byteLength) {
+                    const length = dataView.getUint32(offset, false);
+                    const type = String.fromCharCode(
+                        dataView.getUint8(offset + 4),
+                        dataView.getUint8(offset + 5),
+                        dataView.getUint8(offset + 6),
+                        dataView.getUint8(offset + 7)
+                    );
+                    
+                    if (type === 'tEXt' || type === 'iTXt') {
+                        const chunk = new Uint8Array(arrayBuffer, offset + 8, length);
+                        const text = new TextDecoder('utf-8').decode(chunk);
+                        textChunks.push(text);
+                    }
+                    
+                    offset += length + 12;
+                    
+                    if (type === 'IEND') break;
+                }
+                
+                displayPNGMetadata(textChunks);
+                
+            } catch (error) {
+                showPNGError('Error reading PNG metadata: ' + error.message);
+            }
+        }
+
+        function displayPNGMetadata(textChunks) {
+            const resultsDiv = document.getElementById('png-results');
+            const errorDiv = document.getElementById('png-error');
+            
+            errorDiv.style.display = 'none';
+            
+            let parameters = '';
+            let positivePrompt = '';
+            let negativePrompt = '';
+            let settings = {};
+            let adetailerSettings = '';
+            
+            // Parse text chunks
+            textChunks.forEach(chunk => {
+                if (chunk.includes('parameters')) {
+                    // Extract parameters from Automatic1111 format
+                    const parts = chunk.split('\x00');
+                    if (parts.length > 1) {
+                        parameters = parts[1];
+                    }
+                }
+            });
+            
+            if (parameters) {
+                // Extract positive prompt (everything before "Negative prompt:")
+                const negativeIndex = parameters.indexOf('Negative prompt:');
+                if (negativeIndex > -1) {
+                    positivePrompt = parameters.substring(0, negativeIndex).trim();
+                    
+                    // Extract negative prompt
+                    const afterNegative = parameters.substring(negativeIndex + 16);
+                    const settingsMatch = afterNegative.match(/\nSteps:|Steps:/);
+                    if (settingsMatch) {
+                        negativePrompt = afterNegative.substring(0, settingsMatch.index).trim();
+                        
+                        // Extract settings
+                        const settingsText = afterNegative.substring(settingsMatch.index);
+                        const settingPairs = settingsText.match(/(\w[\w\s]*?):\s*([^,\n]+)/g);
+                        if (settingPairs) {
+                            settingPairs.forEach(pair => {
+                                const [key, value] = pair.split(':').map(s => s.trim());
+                                settings[key] = value;
+                            });
+                        }
+                    } else {
+                        negativePrompt = afterNegative.trim();
+                    }
+                } else {
+                    // No negative prompt, look for settings
+                    const settingsMatch = parameters.match(/\nSteps:|Steps:/);
+                    if (settingsMatch) {
+                        positivePrompt = parameters.substring(0, settingsMatch.index).trim();
+                        const settingsText = parameters.substring(settingsMatch.index);
+                        const settingPairs = settingsText.match(/(\w[\w\s]*?):\s*([^,\n]+)/g);
+                        if (settingPairs) {
+                            settingPairs.forEach(pair => {
+                                const [key, value] = pair.split(':').map(s => s.trim());
+                                settings[key] = value;
+                            });
+                        }
+                    } else {
+                        positivePrompt = parameters.trim();
+                    }
+                }
+                
+                // Extract ADetailer settings if present
+                const adetailerMatch = parameters.match(/ADetailer[^:]*:\s*([^,]+(?:,\s*[^,]+)*)/);
+                if (adetailerMatch) {
+                    adetailerSettings = adetailerMatch[0];
+                }
+            }
+            
+            // Display extracted data
+            document.getElementById('png-positive-prompt').textContent = positivePrompt || 'No positive prompt found';
+            document.getElementById('png-negative-prompt').textContent = negativePrompt || 'No negative prompt found';
+            
+            // Format settings display
+            let settingsDisplay = '';
+            Object.entries(settings).forEach(([key, value]) => {
+                if (!key.includes('ADetailer')) {
+                    settingsDisplay += `${key}: ${value}\n`;
+                }
+            });
+            document.getElementById('png-settings').textContent = settingsDisplay || 'No settings found';
+            
+            // Display ADetailer settings if found
+            if (adetailerSettings) {
+                document.getElementById('adetailer-section').style.display = 'block';
+                document.getElementById('png-adetailer').textContent = adetailerSettings;
+            } else {
+                document.getElementById('adetailer-section').style.display = 'none';
+            }
+            
+            // Store the positive prompt for parsing
+            extractedPrompt = positivePrompt;
+            
+            resultsDiv.style.display = 'block';
+        }
+
+        function parseExtractedPrompt() {
+            if (!extractedPrompt) {
+                showPNGError('No prompt available to parse');
+                return;
+            }
+            
+            // Set the prompt in the text area and parse it
+            document.getElementById('prompt-input').value = extractedPrompt;
+            parsePrompt();
+            
+            // Scroll to parser section
+            document.querySelector('.prompt-parser-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showPNGError(message) {
+            const errorDiv = document.getElementById('png-error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Google Sheets functions
+        function showSheetsSetup() {
+            document.getElementById('sheetsModal').style.display = 'block';
+            document.getElementById('sheets-url').value = sheetsUrl;
+        }
+
+        function closeSheetsModal() {
+            document.getElementById('sheetsModal').style.display = 'none';
+        }
+
+        function saveSheetsUrl() {
+            const url = document.getElementById('sheets-url').value.trim();
+            if (!url) {
+                alert('Please enter a valid URL');
+                return;
+            }
+            
+            sheetsUrl = url;
+            try {
+                localStorage.setItem('ai-influencer-sheets-url', url);
+            } catch (e) {
+                console.log('Could not save to localStorage');
+            }
+            
+            document.getElementById('sheets-setup-btn').style.display = 'none';
+            document.getElementById('sheets-sync-btn').style.display = 'inline-block';
+            document.getElementById('sheets-load-btn').style.display = 'inline-block';
+            closeSheetsModal();
+            updateSyncStatus(true);
+            showMessage('Google Sheets connected successfully!');
+        }
+
+        function updateSyncStatus(connected) {
+            const statusEl = document.getElementById('sync-status');
+            if (connected) {
+                statusEl.textContent = 'Connected to Sheets';
+                statusEl.className = 'sync-status synced';
+            } else {
+                statusEl.textContent = 'Not Connected';
+                statusEl.className = 'sync-status not-synced';
+            }
+        }
+
+        async function syncWithSheets() {
+            if (!sheetsUrl) {
+                showMessage('Please setup Google Sheets first');
+                return;
+            }
+
+            try {
+                const response = await fetch(sheetsUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(profiles)
+                });
+                
+                showMessage('Profiles synced to Google Sheets!');
+            } catch (error) {
+                console.error('Error syncing with Sheets:', error);
+                showMessage('Error syncing with Google Sheets');
+            }
+        }
+
+        async function loadFromSheets() {
+            if (!sheetsUrl) {
+                showMessage('Please setup Google Sheets first');
+                return;
+            }
+
+            try {
+                const response = await fetch(sheetsUrl);
+                const data = await response.json();
+                
+                profiles = data;
+                updateProfileSelect();
+                showMessage('Profiles loaded from Google Sheets!');
+                
+                // Load first profile if exists
+                const profileNames = Object.keys(profiles);
+                if (profileNames.length > 0) {
+                    currentProfileName = profileNames[0];
+                    document.getElementById('profile-select').value = currentProfileName;
+                    loadProfile();
+                }
+            } catch (error) {
+                console.error('Error loading from Sheets:', error);
+                showMessage('Error loading from Google Sheets');
+            }
+        }
+
+        // Parse prompt function
+        function parsePrompt() {
+            const promptInput = document.getElementById('prompt-input').value.trim();
+            const errorDiv = document.getElementById('parse-error');
+            const resultsDiv = document.getElementById('parsed-results');
+            const parsedContent = document.getElementById('parsed-content');
+            
+            errorDiv.style.display = 'none';
+            resultsDiv.style.display = 'none';
+            
+            if (!promptInput) {
+                showParseError('Please enter a prompt to parse');
+                return;
+            }
+
+            try {
+                // Extract name
+                const nameMatch = promptInput.match(/Her name is ([^,]+),/i);
+                const name = nameMatch ? nameMatch[1].trim() : '';
+                
+                // Extract body type - look for patterns like (skinny:1.x), (Petite:1.x)
+                const bodyTypeMatches = [];
+                const skinnyMatch = promptInput.match(/\(skinny:[\d.]+\)/i);
+                const petiteMatch = promptInput.match(/\(Petite:[\d.]+\)/i);
+                if (skinnyMatch) bodyTypeMatches.push(skinnyMatch[0]);
+                if (petiteMatch) bodyTypeMatches.push(petiteMatch[0]);
+                const bodyType = bodyTypeMatches.join(', ');
+                
+                // Extract hair color
+                const hairColorMatch = promptInput.match(/\((Redhead|brunette|blonde):[\d.]+\)/i);
+                const hairColor = hairColorMatch ? hairColorMatch[0] : '';
+                
+                // Extract ethnicity
+                const ethnicityMatch = promptInput.match(/\(([^)]*(?:Israeli|Swedish|typical)[^)]*features[^)]*)\)/i);
+                const ethnicity = ethnicityMatch ? `(${ethnicityMatch[1]})` : '';
+                
+                // Extract breast size (formerly physical features)
+                const breastMatch = promptInput.match(/\((?:size )?32[a-c] breasts(?::[\d.]+)?\)/i);
+                const breastSize = breastMatch ? breastMatch[0] : '';
+                
+                // Extract hair style (current, not permanent)
+                let currentHairStyle = '';
+                hairStyles.forEach(style => {
+                    if (promptInput.includes(style)) {
+                        currentHairStyle = style;
+                    }
+                });
+
+                if (!name) {
+                    showParseError('Could not find character name in the prompt');
+                    return;
+                }
+
+                // Store parsed data
+                parsedProfileData = {
+                    name: name.toLowerCase(),
+                    bodyType: bodyType,
+                    hairColor: hairColor,
+                    ethnicity: ethnicity,
+                    breastSize: breastSize
+                };
+
+                // Display results
+                let html = '';
+                html += `<div class="parsed-item"><strong>Name:</strong> ${parsedProfileData.name || 'Not found'}</div>`;
+                html += `<div class="parsed-item"><strong>Body Type:</strong> ${parsedProfileData.bodyType || 'Not found'}</div>`;
+                html += `<div class="parsed-item"><strong>Hair Color:</strong> ${parsedProfileData.hairColor || 'Not found'}</div>`;
+                html += `<div class="parsed-item"><strong>Ethnicity:</strong> ${parsedProfileData.ethnicity || 'Not found'}</div>`;
+                html += `<div class="parsed-item"><strong>Breast Size:</strong> ${parsedProfileData.breastSize || 'Not found'}</div>`;
+                if (currentHairStyle) {
+                    html += `<div class="parsed-item"><strong>Current Hair Style:</strong> ${currentHairStyle} (not part of permanent profile)</div>`;
+                }
+                
+                parsedContent.innerHTML = html;
+                resultsDiv.style.display = 'block';
+
+            } catch (error) {
+                showParseError('Error parsing prompt: ' + error.message);
+            }
+        }
+
+        // Create profile from parsed data
+        function createProfileFromParsed() {
+            if (!parsedProfileData || !parsedProfileData.name) {
+                showParseError('No valid parsed data available');
+                return;
+            }
+
+            // Create profile name from character name
+            const profileName = parsedProfileData.name.split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+
+            if (profiles[profileName]) {
+                if (!confirm(`Profile "${profileName}" already exists. Do you want to update it?`)) {
+                    return;
+                }
+            }
+
+            // Create/update profile
+            profiles[profileName] = {
+                name: parsedProfileData.name,
+                bodyType: parsedProfileData.bodyType,
+                hairColor: parsedProfileData.hairColor,
+                ethnicity: parsedProfileData.ethnicity,
+                breastSize: parsedProfileData.breastSize
+            };
+
+            // Update UI
+            currentProfileName = profileName;
+            updateProfileSelect();
+            document.getElementById('profile-select').value = profileName;
+            loadProfile();
+
+            // Hide parser results
+            document.getElementById('parsed-results').style.display = 'none';
+            document.getElementById('prompt-input').value = '';
+            
+            showMessage(`Profile "${profileName}" created successfully!`);
+        }
+
+        // Show parse error
+        function showParseError(message) {
+            const errorDiv = document.getElementById('parse-error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize page
+        function initializePage() {
+            updateProfileSelect();
+            // Load first profile if exists
+            const profileNames = Object.keys(profiles);
+            if (profileNames.length > 0) {
+                currentProfileName = profileNames[0];
+                document.getElementById('profile-select').value = currentProfileName;
+                loadProfile();
+            }
+        }
+
+        // Update profile dropdown
+        function updateProfileSelect() {
+            const select = document.getElementById('profile-select');
+            select.innerHTML = '<option value="">Select a profile...</option>';
+            
+            Object.keys(profiles).forEach(profileName => {
+                const option = document.createElement('option');
+                option.value = profileName;
+                option.textContent = profileName;
+                select.appendChild(option);
+            });
+        }
+
+        // Load selected profile
+        function loadProfile() {
+            const profileName = document.getElementById('profile-select').value;
+            if (!profileName) return;
+            
+            currentProfileName = profileName;
+            const profile = profiles[profileName];
+            
+            document.getElementById('char-name').value = profile.name || '';
+            document.getElementById('body-type').value = profile.bodyType || '';
+            document.getElementById('hair-color').value = profile.hairColor || '';
+            document.getElementById('ethnicity').value = profile.ethnicity || '';
+            document.getElementById('breast-size').value = profile.breastSize || '';
+        }
+
+        // Save current profile
+        function saveProfile() {
+            if (!currentProfileName) {
+                showMessage('Please select or create a profile first');
+                return;
+            }
+            
+            profiles[currentProfileName] = {
+                name: document.getElementById('char-name').value,
+                bodyType: document.getElementById('body-type').value,
+                hairColor: document.getElementById('hair-color').value,
+                ethnicity: document.getElementById('ethnicity').value,
+                breastSize: document.getElementById('breast-size').value
+            };
+            
+            showMessage('Profile saved successfully!');
+            
+            // Auto-sync if connected to Sheets
+            if (sheetsUrl) {
+                syncWithSheets();
+            }
+        }
+
+        // Create new profile
+        function newProfile() {
+            document.getElementById('nameModal').style.display = 'block';
+            document.getElementById('new-profile-name').value = '';
+            document.getElementById('new-profile-name').focus();
+        }
+
+        // Create new profile with name
+        function createNewProfile() {
+            const profileName = document.getElementById('new-profile-name').value.trim();
+            if (!profileName) {
+                alert('Please enter a profile name');
+                return;
+            }
+            
+            if (profiles[profileName]) {
+                alert('A profile with this name already exists');
+                return;
+            }
+            
+            // Clear form
+            document.getElementById('char-name').value = '';
+            document.getElementById('body-type').value = '';
+            document.getElementById('hair-color').value = '';
+            document.getElementById('ethnicity').value = '';
+            document.getElementById('breast-size').value = '';
+            
+            // Add new profile
+            profiles[profileName] = {
+                name: '',
+                bodyType: '',
+                hairColor: '',
+                ethnicity: '',
+                breastSize: ''
+            };
+            
+            currentProfileName = profileName;
+            updateProfileSelect();
+            document.getElementById('profile-select').value = profileName;
+            
+            closeModal();
+            showMessage('New profile created. Please fill in the details and save.');
+        }
+
+        // Delete profile
+        function deleteProfile() {
+            if (!currentProfileName) {
+                showMessage('Please select a profile to delete');
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to delete the profile "${currentProfileName}"?`)) {
+                delete profiles[currentProfileName];
+                
+                currentProfileName = '';
+                document.getElementById('profile-select').value = '';
+                
+                // Clear form
+                document.getElementById('char-name').value = '';
+                document.getElementById('body-type').value = '';
+                document.getElementById('hair-color').value = '';
+                document.getElementById('ethnicity').value = '';
+                document.getElementById('breast-size').value = '';
+                
+                updateProfileSelect();
+                showMessage('Profile deleted successfully');
+                
+                // Auto-sync if connected to Sheets
+                if (sheetsUrl) {
+                    syncWithSheets();
+                }
+            }
+        }
+
+        // Export profiles
+        function exportProfiles() {
+            const dataStr = JSON.stringify(profiles, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'ai-influencer-profiles.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showMessage('Profiles exported successfully!');
+        }
+
+        // Show import modal
+        function showImportModal() {
+            document.getElementById('importModal').style.display = 'block';
+            document.getElementById('import-data').value = '';
+        }
+
+        // Import profiles
+        function importProfiles() {
+            const importData = document.getElementById('import-data').value.trim();
+            if (!importData) {
+                alert('Please paste the profile data');
+                return;
+            }
+            
+            try {
+                const importedProfiles = JSON.parse(importData);
+                profiles = { ...profiles, ...importedProfiles };
+                updateProfileSelect();
+                closeImportModal();
+                showMessage('Profiles imported successfully!');
+                
+                // Auto-sync if connected to Sheets
+                if (sheetsUrl) {
+                    syncWithSheets();
+                }
+            } catch (e) {
+                alert('Invalid profile data. Please check the format.');
+            }
+        }
+
+        // Show success message
+        function showMessage(message) {
+            const messageDiv = document.getElementById('success-message');
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Modal functions
+        function closeModal() {
+            document.getElementById('nameModal').style.display = 'none';
+        }
+
+        function closeImportModal() {
+            document.getElementById('importModal').style.display = 'none';
+        }
+
+        // Generate prompt - UPDATED with new structure
+        function generatePrompt() {
+            if (!currentProfileName) {
+                showMessage('Please select a profile first');
+                return;
+            }
+            
+            // Get character profile values
+            const charName = document.getElementById('char-name').value;
+            const bodyType = document.getElementById('body-type').value;
+            const hairColor = document.getElementById('hair-color').value;
+            const ethnicity = document.getElementById('ethnicity').value;
+            const breastSize = document.getElementById('breast-size').value;
+
+            if (!charName || !bodyType || !hairColor || !ethnicity || !breastSize) {
+                showMessage('Please fill in all profile fields');
+                return;
+            }
+
+            // Get quantity
+            const quantity = parseInt(document.getElementById('prompt-quantity').value) || 1;
+            const maxQuantity = 10000;
+            const finalQuantity = Math.min(Math.max(1, quantity), maxQuantity);
+
+            // Get filtered options
+            const filtered = getFilteredOptions();
+
+            // Generate multiple prompts
+            const prompts = [];
+            for (let i = 0; i < finalQuantity; i++) {
+                // Random selections from filtered options
+                const shotType = filtered.shotTypes[Math.floor(Math.random() * filtered.shotTypes.length)];
+                const cameraAngle = filtered.angles[Math.floor(Math.random() * filtered.angles.length)];
+                const camera = filtered.cameras[Math.floor(Math.random() * filtered.cameras.length)];
+                const pose = filtered.poses[Math.floor(Math.random() * filtered.poses.length)];
+                const hairStyle = hairStyles[Math.floor(Math.random() * hairStyles.length)];
+                const expression = filtered.expressions[Math.floor(Math.random() * filtered.expressions.length)];
+                const outfit = outfits[Math.floor(Math.random() * outfits.length)];
+                
+                // Determine if indoor or outdoor
+                const isIndoor = Math.random() < 0.5;
+                let locationBase, lightingFull;
+                
+                if (isIndoor) {
+                    locationBase = locationBases[Math.floor(Math.random() * locationBases.length)];
+                    lightingFull = lightingCombinations.indoor[Math.floor(Math.random() * lightingCombinations.indoor.length)];
+                } else {
+                    locationBase = outdoorLocationBases[Math.floor(Math.random() * outdoorLocationBases.length)];
+                    lightingFull = lightingCombinations.outdoor[Math.floor(Math.random() * lightingCombinations.outdoor.length)];
+                }
+
+                // LAYER 1: Shot type, angle, camera, age, pose
+                const layer1 = `${shotType}, ${cameraAngle}, (Intricate detail, professional photography) Shot on ${camera} of a girl age 18 ${pose}`;
+
+                // LAYER 2: Character description
+                const layer2 = `Her name is ${charName}, ${ethnicity}, ${hairColor}, ${hairStyle}, ${bodyType}, ${breastSize}`;
+
+                // LAYER 3: Expression, clothing, scenery, lighting
+                const layer3 = `${expression}, ${outfit}, ${locationBase}, ${lightingFull}`;
+
+                // Construct the complete prompt
+                const prompt = `${layer1}. ${layer2}, ${layer3}`;
+                
+                prompts.push(prompt);
+            }
+
+            // Display the prompts
+            const promptContainer = document.getElementById('generated-prompt');
+            promptContainer.textContent = prompts.join('\n\n');
+            
+            // Update counter
+            const counter = document.getElementById('prompt-counter');
+            counter.textContent = `Generated ${finalQuantity} prompt${finalQuantity > 1 ? 's' : ''}`;
+        }
+
+        // Copy to clipboard
+        function copyToClipboard() {
+            const promptText = document.getElementById('generated-prompt').textContent;
+            if (promptText) {
+                navigator.clipboard.writeText(promptText).then(() => {
+                    showMessage('Prompt(s) copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const nameModal = document.getElementById('nameModal');
+            const importModal = document.getElementById('importModal');
+            const sheetsModal = document.getElementById('sheetsModal');
+            if (event.target == nameModal) {
+                closeModal();
+            }
+            if (event.target == importModal) {
+                closeImportModal();
+            }
+            if (event.target == sheetsModal) {
+                closeSheetsModal();
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            initializePage();
+        };
+    </script>
+
+
+</body></html>

@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced AI Influencer Prompt Generator</title>
@@ -73,6 +75,47 @@
             margin-top: 0;
             color: #388e3c;
             font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .select-all-btn {
+            font-size: 12px;
+            padding: 4px 8px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .select-all-btn:hover {
+            background-color: #45a049;
+        }
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 4px;
+        }
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        .checkbox-item label {
+            cursor: pointer;
+            font-size: 14px;
+            margin: 0;
+            user-select: none;
         }
         .option-select {
             width: 100%;
@@ -433,7 +476,7 @@
         }
         .option-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 15px;
         }
         @media (max-width: 768px) {
@@ -462,9 +505,12 @@
             .option-row {
                 grid-template-columns: 1fr;
             }
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
-<script src="https://puc.poecdn.net/authenticated_preview_page/syncedState.bd4eeeb8e8e02052ee92.js"></script></head>
+</head>
 <body>
     <div class="container">
         <h1>Advanced AI Influencer Prompt Generator</h1>
@@ -494,94 +540,70 @@
             <h3>Advanced Prompt Options</h3>
             <div class="option-row">
                 <div class="option-group">
-                    <h4>Shot Type</h4>
-                    <select id="shot-type-select" class="option-select">
-                        <option value="all">All Shot Types</option>
-                        <option value="(close-up shot:1.1)">Close-up</option>
-                        <option value="(medium shot:1.1)">Medium Shot</option>
-                        <option value="(medium full:1.1)">Medium Full</option>
-                        <option value="(full body shot:1.1)">Full Body</option>
-                        <option value="(wide shot:1.1)">Wide Shot</option>
-                    </select>
+                    <h4>
+                        Shot Types
+                        <button class="select-all-btn" onclick="toggleAll('shot-type')">Select All</button>
+                    </h4>
+                    <div class="checkbox-grid" id="shot-type-checkboxes">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
                 </div>
                 <div class="option-group">
-                    <h4>Camera Angle</h4>
-                    <select id="angle-select" class="option-select">
-                        <option value="all">All Angles</option>
-                        <option value="low angle view">Low Angle</option>
-                        <option value="high angle view">High Angle</option>
-                        <option value="eye level view">Eye Level</option>
-                        <option value="bird's eye view">Bird's Eye</option>
-                        <option value="dutch angle">Dutch Angle</option>
-                    </select>
+                    <h4>
+                        Camera Angles
+                        <button class="select-all-btn" onclick="toggleAll('camera-angle')">Select All</button>
+                    </h4>
+                    <div class="checkbox-grid" id="camera-angle-checkboxes">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
                 </div>
                 <div class="option-group">
-                    <h4>Pose Category</h4>
-                    <select id="pose-category-select" class="option-select" onchange="updatePoseSubcategory()">
-                        <option value="all">All Poses</option>
+                    <h4>
+                        Poses
+                        <button class="select-all-btn" onclick="toggleAll('pose')">Select All</button>
+                    </h4>
+                    <select id="pose-category-select" class="option-select" onchange="updatePoseCheckboxes()">
+                        <option value="all">All Categories</option>
                         <option value="standing">Standing Poses</option>
-                        <option value="walking">Walking &amp; Movement</option>
+                        <option value="walking">Walking & Movement</option>
                         <option value="sitting">Sitting Poses</option>
-                        <option value="kneeling">Kneeling &amp; Crouching</option>
+                        <option value="kneeling">Kneeling & Crouching</option>
                         <option value="laying">Laying Poses</option>
                         <option value="expressive">Expressive / Emotional</option>
-                        <option value="arms">Arms &amp; Hands Focus</option>
+                        <option value="arms">Arms & Hands Focus</option>
                         <option value="action">Action / Dynamic</option>
                         <option value="instagram">Instagram / Social</option>
                     </select>
+                    <div class="checkbox-grid" id="pose-checkboxes">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
                 </div>
                 <div class="option-group">
-                    <h4>Specific Pose</h4>
-                    <select id="pose-select" class="option-select">
-                        <option value="all">All Poses in Category</option>
-                    </select>
+                    <h4>
+                        Camera Models
+                        <button class="select-all-btn" onclick="toggleAll('camera')">Select All</button>
+                    </h4>
+                    <div class="checkbox-grid" id="camera-checkboxes">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
                 </div>
                 <div class="option-group">
-                    <h4>Camera Model</h4>
-                    <select id="camera-select" class="option-select">
-                        <option value="all">All Cameras</option>
-                        <option value="fujifilm">Fujifilm GFX</option>
-                        <option value="canon">Canon EOS R5</option>
-                        <option value="sony">Sony Alpha</option>
-                        <option value="nikon">Nikon Z</option>
-                        <option value="leica">Leica M11-D</option>
-                        <option value="hasselblad">Hasselblad</option>
-                    </select>
+                    <h4>
+                        Facial Expressions
+                        <button class="select-all-btn" onclick="toggleAll('expression')">Select All</button>
+                    </h4>
+                    <div class="checkbox-grid" id="expression-checkboxes">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
                 </div>
                 <div class="option-group">
-                    <h4>Facial Expression</h4>
-                    <select id="expression-select" class="option-select">
-                        <option value="all">All Expressions</option>
-                        <option value="fierce look">Fierce Look</option>
-                        <option value="soft gaze">Soft Gaze</option>
-                        <option value="subtle smile">Subtle Smile</option>
-                        <option value="big genuine smile">Big Genuine Smile</option>
-                        <option value="pouty lips">Pouty Lips</option>
-                        <option value="smirk">Smirk</option>
-                        <option value="laughing">Laughing</option>
-                    </select>
-                </div>
-                <div class="option-group">
-                    <h4>Lighting Type</h4>
-                    <select id="lighting-type-select" class="option-select">
-                        <option value="all">All Lighting Types</option>
-                        <option value="natural">Natural Lighting</option>
-                        <option value="cinematic">Cinematic Lighting</option>
-                        <option value="studio">Studio Lighting</option>
-                        <option value="dramatic">Dramatic Lighting</option>
-                        <option value="soft">Soft Lighting</option>
-                    </select>
-                </div>
-                <div class="option-group">
-                    <h4>Lighting Direction</h4>
-                    <select id="lighting-direction-select" class="option-select">
-                        <option value="all">All Directions</option>
-                        <option value="left">Left Side</option>
-                        <option value="right">Right Side</option>
-                        <option value="overhead">Overhead</option>
-                        <option value="underneath">Underneath</option>
-                        <option value="backlit">Backlit</option>
-                    </select>
+                    <h4>
+                        Lighting Types
+                        <button class="select-all-btn" onclick="toggleAll('lighting')">Select All</button>
+                    </h4>
+                    <div class="checkbox-grid" id="lighting-checkboxes">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -700,7 +722,7 @@
     <!-- Modal for new profile name -->
     <div id="nameModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">×</span>
+            <span class="close" onclick="closeModal()">&times;</span>
             <h3>Enter Profile Name</h3>
             <input type="text" id="new-profile-name" placeholder="Enter profile name..." style="width: 100%; margin: 20px 0;">
             <button onclick="createNewProfile()">Create Profile</button>
@@ -710,7 +732,7 @@
     <!-- Modal for import -->
     <div id="importModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeImportModal()">×</span>
+            <span class="close" onclick="closeImportModal()">&times;</span>
             <h3>Import Profiles</h3>
             <p>Paste your exported profile data below:</p>
             <textarea id="import-data" placeholder="Paste exported JSON data here..."></textarea>
@@ -721,7 +743,7 @@
     <!-- Modal for Google Sheets Setup -->
     <div id="sheetsModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeSheetsModal()">×</span>
+            <span class="close" onclick="closeSheetsModal()">&times;</span>
             <h3>Google Sheets Setup</h3>
             <div class="setup-instructions">
                 <p><strong>To use Google Sheets storage:</strong></p>
@@ -740,12 +762,13 @@
             </div>
             <div style="margin-top: 20px;">
                 <h4>Apps Script Code:</h4>
-                <textarea style="width: 100%; height: 300px; font-family: monospace; font-size: 12px;" readonly="">function doGet() {
+                <textarea style="width: 100%; height: 300px; font-family: monospace; font-size: 12px;" readonly>
+function doGet() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   const data = sheet.getDataRange().getValues();
   const profiles = {};
   
-  for (let i = 1; i &lt; data.length; i++) {
+  for (let i = 1; i < data.length; i++) {
     if (data[i][0]) {
       profiles[data[i][0]] = {
         name: data[i][1],
@@ -784,7 +807,7 @@ function doPost(e) {
     ]);
   }
   
-  if (rows.length &gt; 0) {
+  if (rows.length > 0) {
     sheet.getRange(2, 1, rows.length, 6).setValues(rows);
   }
   
@@ -834,20 +857,20 @@ function doPost(e) {
 
         // Shot types array
         const shotTypes = [
-            "(close-up shot:1.1)",
-            "(medium shot:1.1)",
-            "(medium full:1.1)",
-            "(full body shot:1.1)",
-            "(wide shot:1.1)"
+            {id: "close-up", value: "(close-up shot:1.1)", label: "Close-up"},
+            {id: "medium", value: "(medium shot:1.1)", label: "Medium Shot"},
+            {id: "medium-full", value: "(medium full:1.1)", label: "Medium Full"},
+            {id: "full-body", value: "(full body shot:1.1)", label: "Full Body"},
+            {id: "wide", value: "(wide shot:1.1)", label: "Wide Shot"}
         ];
 
         // Camera angles array
         const cameraAngles = [
-            "low angle view",
-            "high angle view",
-            "eye level view",
-            "bird's eye view",
-            "dutch angle"
+            {id: "low", value: "low angle view", label: "Low Angle"},
+            {id: "high", value: "high angle view", label: "High Angle"},
+            {id: "eye", value: "eye level view", label: "Eye Level"},
+            {id: "birds", value: "bird's eye view", label: "Bird's Eye"},
+            {id: "dutch", value: "dutch angle", label: "Dutch Angle"}
         ];
 
         // Pose categories and poses
@@ -1050,7 +1073,6 @@ function doPost(e) {
                     "walking crosswalk mid-step",
                     "looking back hair over shoulder",
                     "crouching low with phone in hand",
-                    "laughing head thrown back",
                     "arms raised in celebration"
                 ]
             }
@@ -1066,17 +1088,17 @@ function doPost(e) {
             "(updo ponytail hairstyle:1.4)"
         ];
 
-        // Camera and lens combinations
-        const cameraSettings = {
-            fujifilm: [
+        // Camera models organized by brand
+        const cameraModels = {
+            "Fujifilm GFX": [
                 "Fujifilm GFX 100S II with GF 110mm f/2 R LM WR",
                 "Fujifilm GFX 100S II with GF 100-200mm f/5.6 R LM OIS WR"
             ],
-            canon: [
+            "Canon EOS": [
                 "Canon EOS R5 Mark II with RF 85mm f/1.2L USM",
                 "Canon EOS R5 Mark II with RF 50mm f/1.2L USM"
             ],
-            sony: [
+            "Sony Alpha": [
                 "Sony A7R V with Sony FE 85mm f/1.4 GM",
                 "Sony A7R V with Sony FE 50mm f/1.2 GM",
                 "Sony A7 IV with Sony FE 85mm f/1.8",
@@ -1084,7 +1106,7 @@ function doPost(e) {
                 "Sony A7 III with Sony FE 85mm f/1.8",
                 "Sony A7 III with Sony FE 135mm f/1.8 GM"
             ],
-            nikon: [
+            "Nikon Z": [
                 "Nikon Z8 with Nikkor Z 85mm f/1.8 S",
                 "Nikon Z8 with Nikkor Z 70-200mm f/2.8 VR S",
                 "Nikon Z6 III with Nikkor Z 85mm f/1.8 S",
@@ -1092,93 +1114,177 @@ function doPost(e) {
                 "Nikon Z7 II with Nikkor 105mm f/1.4E ED",
                 "Nikon Z7 II with Nikkor Z 50mm f/1.2 S"
             ],
-            leica: [
+            "Leica": [
                 "Leica M11-D with Leica APO-Summicron-M 75mm f/2 ASPH",
                 "Leica M11-D with Leica Summilux-M 50mm f/1.4 ASPH"
             ],
-            hasselblad: [
+            "Hasselblad": [
                 "Hasselblad 907X 100C with XCD 80mm f/1.9",
                 "Hasselblad 907X 100C with XCD 120mm f/3.5 Macro"
             ]
         };
 
-        // Facial expressions
+        // Facial expressions (removed open mouth and big smile ones)
         const facialExpressions = [
             "fierce look",
             "soft gaze",
             "subtle smile",
             "soft smile, eyes looking into camera",
-            "big genuine smile, teeth showing",
             "closed-mouth smile, subtle and chic",
             "pouty lips, sultry gaze",
-            "duck face pout, playful",
-            "tongue out, winking",
             "smirk with raised eyebrow",
             "side-eye glance with slight grin",
-            "eyes closed, head tilted back, enjoying moment",
             "eyes closed, slight smile, serene",
             "looking over shoulder with sly smile",
-            "hand covering mouth while smiling",
             "bite lower lip, flirtatious look",
-            "kissy face toward camera",
-            "peace sign near face, playful grin",
-            "hair flip with laughing face",
             "looking down shyly, small smile",
             "fake serious face, straight lips",
             "raised brows with mischievous smile",
             "chin slightly tucked, big bright eyes",
             "half smile, mysterious expression",
-            "eyes squinting with laughter",
             "one eye wink, lips pursed",
             "caught off guard candid look",
-            "hands on cheeks, exaggerated cute face",
-            "laughing while looking away",
             "soft dreamy expression, parted lips",
             "fierce stare, no smile",
             "bold confident smirk, eyes locked on camera"
         ];
 
-        // Lighting types
-        const lightingTypes = {
-            natural: ["natural lighting", "sunlight", "daylight", "ambient light"],
-            cinematic: ["cinematic lighting", "film lighting", "movie-style lighting"],
-            studio: ["studio lighting", "professional lighting", "softbox lighting"],
-            dramatic: ["dramatic lighting", "high contrast lighting", "moody lighting"],
-            soft: ["soft lighting", "diffused lighting", "gentle lighting"]
-        };
+        // Lighting combinations
+        const lightingCombinations = [
+            "natural lighting from the left side",
+            "natural lighting from the right side",
+            "natural lighting from overhead",
+            "cinematic lighting from the left side",
+            "cinematic lighting from the right side",
+            "cinematic lighting from overhead",
+            "dramatic lighting from the left side",
+            "dramatic lighting from the right side",
+            "dramatic lighting from underneath",
+            "soft lighting from both sides",
+            "soft lighting from overhead",
+            "studio lighting from the left",
+            "studio lighting from the right",
+            "backlit natural lighting",
+            "golden hour sunlight from the left",
+            "golden hour sunlight from the right",
+            "blue hour ambient light from overhead",
+            "moonlight from the left side",
+            "fluorescent lights from overhead",
+            "warm ambient lighting from underneath"
+        ];
 
-        // Lighting directions
-        const lightingDirections = {
-            left: "left side",
-            right: "right side",
-            overhead: "overhead",
-            underneath: "underneath",
-            backlit: "backlit"
-        };
+        // Initialize checkboxes
+        function initializeCheckboxes() {
+            // Shot types
+            const shotTypeContainer = document.getElementById('shot-type-checkboxes');
+            shotTypes.forEach(item => {
+                const div = createCheckbox('shot-type', item.id, item.label, item.value);
+                shotTypeContainer.appendChild(div);
+            });
 
-        // Combined lighting descriptions
-        const lightingCombinations = {
-            indoor: [
-                "cinematic lighting from the left side",
-                "fluorescent lights from overhead",
-                "dramatic lighting from the right side",
-                "dim lighting from underneath",
-                "natural lighting through windows from the left",
-                "studio lighting from both sides",
-                "warm ambient lighting from overhead",
-                "soft diffused lighting from the right"
-            ],
-            outdoor: [
-                "golden hour sunlight from the left",
-                "blue hour ambient light from overhead",
-                "sunrise lighting from the right side",
-                "sunset backlighting",
-                "overcast natural light from above",
-                "moonlight from the left side",
-                "street lights from underneath",
-                "natural daylight from overhead"
-            ]
-        };
+            // Camera angles
+            const angleContainer = document.getElementById('camera-angle-checkboxes');
+            cameraAngles.forEach(item => {
+                const div = createCheckbox('camera-angle', item.id, item.label, item.value);
+                angleContainer.appendChild(div);
+            });
+
+            // Cameras
+            const cameraContainer = document.getElementById('camera-checkboxes');
+            Object.entries(cameraModels).forEach(([brand, models]) => {
+                models.forEach((model, index) => {
+                    const id = `${brand.toLowerCase().replace(/\s+/g, '-')}-${index}`;
+                    const div = createCheckbox('camera', id, model, model);
+                    cameraContainer.appendChild(div);
+                });
+            });
+
+            // Expressions
+            const expressionContainer = document.getElementById('expression-checkboxes');
+            facialExpressions.forEach((expr, index) => {
+                const id = `expr-${index}`;
+                const div = createCheckbox('expression', id, expr, expr);
+                expressionContainer.appendChild(div);
+            });
+
+            // Lighting
+            const lightingContainer = document.getElementById('lighting-checkboxes');
+            lightingCombinations.forEach((light, index) => {
+                const id = `light-${index}`;
+                const div = createCheckbox('lighting', id, light, light);
+                lightingContainer.appendChild(div);
+            });
+
+            // Initialize poses
+            updatePoseCheckboxes();
+
+            // Select all by default
+            toggleAll('shot-type');
+            toggleAll('camera-angle');
+            toggleAll('camera');
+            toggleAll('expression');
+            toggleAll('lighting');
+            toggleAll('pose');
+        }
+
+        // Create checkbox element
+        function createCheckbox(category, id, label, value) {
+            const div = document.createElement('div');
+            div.className = 'checkbox-item';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `${category}-${id}`;
+            checkbox.value = value;
+            checkbox.dataset.category = category;
+            
+            const labelEl = document.createElement('label');
+            labelEl.htmlFor = checkbox.id;
+            labelEl.textContent = label;
+            
+            div.appendChild(checkbox);
+            div.appendChild(labelEl);
+            
+            return div;
+        }
+
+        // Update pose checkboxes based on category
+        function updatePoseCheckboxes() {
+            const category = document.getElementById('pose-category-select').value;
+            const container = document.getElementById('pose-checkboxes');
+            container.innerHTML = '';
+            
+            let poses = [];
+            if (category === 'all') {
+                Object.values(poseCategories).forEach(cat => {
+                    poses = poses.concat(cat.poses);
+                });
+            } else if (poseCategories[category]) {
+                poses = poseCategories[category].poses;
+            }
+            
+            poses.forEach((pose, index) => {
+                const id = `pose-${category}-${index}`;
+                const div = createCheckbox('pose', id, pose, pose);
+                container.appendChild(div);
+            });
+            
+            // Select all poses by default
+            toggleAll('pose');
+        }
+
+        // Toggle all checkboxes in a category
+        function toggleAll(category) {
+            const checkboxes = document.querySelectorAll(`input[data-category="${category}"]`);
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            checkboxes.forEach(cb => cb.checked = !allChecked);
+        }
+
+        // Get selected options
+        function getSelectedOptions(category) {
+            const checkboxes = document.querySelectorAll(`input[data-category="${category}"]:checked`);
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
 
         // Outfits array (unchanged)
         const outfits = [
@@ -1369,98 +1475,6 @@ function doPost(e) {
             "urban alleyway cafe, string lights, brick walls",
             "luxury ski chalet balcony, mountain view, snow"
         ];
-
-        // Update pose subcategory dropdown
-        function updatePoseSubcategory() {
-            const categorySelect = document.getElementById('pose-category-select');
-            const poseSelect = document.getElementById('pose-select');
-            const selectedCategory = categorySelect.value;
-            
-            // Clear current options
-            poseSelect.innerHTML = '<option value="all">All Poses in Category</option>';
-            
-            if (selectedCategory !== 'all' && poseCategories[selectedCategory]) {
-                poseCategories[selectedCategory].poses.forEach(pose => {
-                    const option = document.createElement('option');
-                    option.value = pose;
-                    option.textContent = pose;
-                    poseSelect.appendChild(option);
-                });
-            }
-        }
-
-        // Get filtered options based on advanced selections
-        function getFilteredOptions() {
-            const shotTypeSelect = document.getElementById('shot-type-select').value;
-            const angleSelect = document.getElementById('angle-select').value;
-            const poseCategorySelect = document.getElementById('pose-category-select').value;
-            const poseSelect = document.getElementById('pose-select').value;
-            const cameraSelect = document.getElementById('camera-select').value;
-            const expressionSelect = document.getElementById('expression-select').value;
-            const lightingTypeSelect = document.getElementById('lighting-type-select').value;
-            const lightingDirectionSelect = document.getElementById('lighting-direction-select').value;
-            
-            // Filter shot types
-            let filteredShotTypes = shotTypeSelect === 'all' ? shotTypes : [shotTypeSelect];
-            
-            // Filter camera angles
-            let filteredAngles = angleSelect === 'all' ? cameraAngles : [angleSelect];
-            
-            // Filter poses
-            let filteredPoses = [];
-            if (poseCategorySelect === 'all') {
-                // Add all poses from all categories
-                Object.values(poseCategories).forEach(category => {
-                    filteredPoses = filteredPoses.concat(category.poses);
-                });
-            } else if (poseCategories[poseCategorySelect]) {
-                if (poseSelect === 'all') {
-                    filteredPoses = poseCategories[poseCategorySelect].poses;
-                } else {
-                    filteredPoses = [poseSelect];
-                }
-            }
-            
-            // Filter cameras
-            let filteredCameras = [];
-            if (cameraSelect === 'all') {
-                Object.values(cameraSettings).forEach(cameras => {
-                    filteredCameras = filteredCameras.concat(cameras);
-                });
-            } else if (cameraSettings[cameraSelect]) {
-                filteredCameras = cameraSettings[cameraSelect];
-            }
-            
-            // Filter expressions
-            let filteredExpressions = expressionSelect === 'all' ? facialExpressions : [expressionSelect];
-            
-            // Filter lighting
-            let filteredLightingTypes = [];
-            if (lightingTypeSelect === 'all') {
-                Object.values(lightingTypes).forEach(types => {
-                    filteredLightingTypes = filteredLightingTypes.concat(types);
-                });
-            } else if (lightingTypes[lightingTypeSelect]) {
-                filteredLightingTypes = lightingTypes[lightingTypeSelect];
-            }
-            
-            let filteredLightingDirections = [];
-            if (lightingDirectionSelect === 'all') {
-                filteredLightingDirections = Object.values(lightingDirections);
-            } else if (lightingDirections[lightingDirectionSelect]) {
-                filteredLightingDirections = [lightingDirections[lightingDirectionSelect]];
-            }
-            
-            return {
-                shotTypes: filteredShotTypes,
-                angles: filteredAngles,
-                poses: filteredPoses,
-                cameras: filteredCameras,
-                expressions: filteredExpressions,
-                lightingTypes: filteredLightingTypes,
-                lightingDirections: filteredLightingDirections
-            };
-        }
 
         // PNG Metadata Extraction Functions
         function handlePNGUpload(event) {
@@ -1873,6 +1887,7 @@ function doPost(e) {
 
         // Initialize page
         function initializePage() {
+            initializeCheckboxes();
             updateProfileSelect();
             // Load first profile if exists
             const profileNames = Object.keys(profiles);
@@ -2072,7 +2087,7 @@ function doPost(e) {
             document.getElementById('importModal').style.display = 'none';
         }
 
-        // Generate prompt - UPDATED with new structure
+        // Generate prompt - UPDATED with checkbox selections
         function generatePrompt() {
             if (!currentProfileName) {
                 showMessage('Please select a profile first');
@@ -2091,36 +2106,48 @@ function doPost(e) {
                 return;
             }
 
+            // Get selected options
+            const selectedShotTypes = getSelectedOptions('shot-type');
+            const selectedAngles = getSelectedOptions('camera-angle');
+            const selectedCameras = getSelectedOptions('camera');
+            const selectedExpressions = getSelectedOptions('expression');
+            const selectedLighting = getSelectedOptions('lighting');
+            const selectedPoses = getSelectedOptions('pose');
+
+            // Check if any options are selected
+            if (selectedShotTypes.length === 0 || selectedAngles.length === 0 || 
+                selectedCameras.length === 0 || selectedExpressions.length === 0 || 
+                selectedLighting.length === 0 || selectedPoses.length === 0) {
+                showMessage('Please select at least one option from each category');
+                return;
+            }
+
             // Get quantity
             const quantity = parseInt(document.getElementById('prompt-quantity').value) || 1;
             const maxQuantity = 10000;
             const finalQuantity = Math.min(Math.max(1, quantity), maxQuantity);
 
-            // Get filtered options
-            const filtered = getFilteredOptions();
-
             // Generate multiple prompts
             const prompts = [];
             for (let i = 0; i < finalQuantity; i++) {
                 // Random selections from filtered options
-                const shotType = filtered.shotTypes[Math.floor(Math.random() * filtered.shotTypes.length)];
-                const cameraAngle = filtered.angles[Math.floor(Math.random() * filtered.angles.length)];
-                const camera = filtered.cameras[Math.floor(Math.random() * filtered.cameras.length)];
-                const pose = filtered.poses[Math.floor(Math.random() * filtered.poses.length)];
+                const shotType = selectedShotTypes[Math.floor(Math.random() * selectedShotTypes.length)];
+                const cameraAngle = selectedAngles[Math.floor(Math.random() * selectedAngles.length)];
+                const camera = selectedCameras[Math.floor(Math.random() * selectedCameras.length)];
+                const pose = selectedPoses[Math.floor(Math.random() * selectedPoses.length)];
                 const hairStyle = hairStyles[Math.floor(Math.random() * hairStyles.length)];
-                const expression = filtered.expressions[Math.floor(Math.random() * filtered.expressions.length)];
+                const expression = selectedExpressions[Math.floor(Math.random() * selectedExpressions.length)];
                 const outfit = outfits[Math.floor(Math.random() * outfits.length)];
+                const lighting = selectedLighting[Math.floor(Math.random() * selectedLighting.length)];
                 
                 // Determine if indoor or outdoor
                 const isIndoor = Math.random() < 0.5;
-                let locationBase, lightingFull;
+                let locationBase;
                 
                 if (isIndoor) {
                     locationBase = locationBases[Math.floor(Math.random() * locationBases.length)];
-                    lightingFull = lightingCombinations.indoor[Math.floor(Math.random() * lightingCombinations.indoor.length)];
                 } else {
                     locationBase = outdoorLocationBases[Math.floor(Math.random() * outdoorLocationBases.length)];
-                    lightingFull = lightingCombinations.outdoor[Math.floor(Math.random() * lightingCombinations.outdoor.length)];
                 }
 
                 // LAYER 1: Shot type, angle, camera, age, pose
@@ -2130,7 +2157,7 @@ function doPost(e) {
                 const layer2 = `Her name is ${charName}, ${ethnicity}, ${hairColor}, ${hairStyle}, ${bodyType}, ${breastSize}`;
 
                 // LAYER 3: Expression, clothing, scenery, lighting
-                const layer3 = `${expression}, ${outfit}, ${locationBase}, ${lightingFull}`;
+                const layer3 = `${expression}, ${outfit}, ${locationBase}, ${lighting}`;
 
                 // Construct the complete prompt
                 const prompt = `${layer1}. ${layer2}, ${layer3}`;
@@ -2180,6 +2207,5 @@ function doPost(e) {
             initializePage();
         };
     </script>
-
-
-</body></html>
+</body>
+</html>
